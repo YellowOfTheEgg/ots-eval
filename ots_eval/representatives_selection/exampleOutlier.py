@@ -3,7 +3,7 @@ from representatives import Representatives
 #from visualizations.plotly.plotter_3d import Plotter
 from visualizations.seaborn import Plotter
 import pandas as pd
-
+from outlier import Outlier
 
 
 def get_data():
@@ -30,7 +30,9 @@ def plot_result(df, representatives):
     pl.add_representatives(representatives)
     fig=pl.generate_fig()   
     #fig.show()
-    fig.savefig('example2.png')
+    fig.savefig('exampleOut.png')
+
+
 
 
 if __name__ == "__main__":
@@ -38,5 +40,6 @@ if __name__ == "__main__":
     clustering = get_clustering(data)
     clustering.rename(columns={"cluster": "cluster_id"}, inplace=True)
     rp = get_representatives(clustering)
-    
-    plot_result(clustering, rp)
+    outlier=Outlier()
+    outlier_df=outlier.get_outliers(clustering,sigma=10)
+    plot_result(clustering,outlier_df)

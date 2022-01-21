@@ -12,6 +12,7 @@ class Representatives:
             .reset_index()
             .rename(columns={"index": "group_id"})
         )
+        
 
         group_assignments = cluster_path_groups.merge(
             all_cluster_paths, on="cluster_path", how="left"
@@ -35,9 +36,12 @@ class Representatives:
         
         return centroid_df
 
+
     def get_representatives(self, df, representative_type="centroids"):
-        extended_df = self.extend_df_by_cluster_path_group(df)  
-       
+        extended_df = self.extend_df_by_cluster_path_group(df)
+        t=extended_df.loc[extended_df['group_id']==0]         
         if representative_type == "centroids":
-            return self.get_centroids(extended_df)
+            centroids= self.get_centroids(extended_df)
+            return centroids
+
 
