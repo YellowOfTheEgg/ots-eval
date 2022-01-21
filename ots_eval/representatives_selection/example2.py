@@ -1,7 +1,7 @@
 from ots_eval.clustering.cots import COTS
 from representatives import Representatives
-from visualizations.plotly.plotter_3d import Plotter3d
-
+#from visualizations.plotly.plotter_3d import Plotter
+from visualizations.seaborn import Plotter
 import pandas as pd
 
 
@@ -25,12 +25,12 @@ def get_representatives(df):
     return representatives
 
 
-def plot_result(df, representatives):
-    pl = Plotter3d(df)
+def plot_result(df, representatives):   
+    pl = Plotter(df)
     pl.add_representatives(representatives)
-    pl.generate_fig()
-    fig = pl.fig_3d
-    fig.show()
+    fig=pl.generate_fig()   
+    #fig.show()
+    fig.savefig('example2.png')
 
 
 if __name__ == "__main__":
