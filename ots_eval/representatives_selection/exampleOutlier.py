@@ -41,5 +41,5 @@ if __name__ == "__main__":
     clustering.rename(columns={"cluster": "cluster_id"}, inplace=True)
     rp = get_representatives(clustering)
     outlier=Outlier()
-    outlier_df=outlier.get_outliers(clustering,sigma=10)
+    outlier_df=outlier.get_outliers(clustering,sigma=1)
     plot_result(clustering,outlier_df)
