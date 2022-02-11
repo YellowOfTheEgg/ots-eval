@@ -14,7 +14,7 @@ plotter_config={
     'time_column_name': 'Time',
     'plot': {
                'time_axis_name': 'time stamp',
-               'col_wrap': 2,
+               'col_wrap': 4,
                'no_timepoints':12,
                'title': 'Covid Data',
                '1DPlot': True,
@@ -33,30 +33,32 @@ def get_clustering(df):
     return clusters
 
 
-def get_representatives(df):
-    rp = Representatives()
-    representatives = rp.get_representatives(df)
-    return representatives
-
-
-def plot_result(df, representatives):   
-    pl = Plotter(df)
-    pl.add_representatives(representatives)
-    fig=pl.generate_fig()   
-    #fig.show()
-    fig.savefig('exampleOut.png')
-
-
 
 
 if __name__ == "__main__":
     data = get_data()
     clustering = get_clustering(data)
-    clustering.rename(columns={"cluster": "cluster_id"}, inplace=True)
-    rp = get_representatives(clustering)
+    clustering.rename(columns={"cluster": "cluster_id"}, inplace=True) 
     outlier=Outlier()
     outlier_df=outlier.detect_outliers(clustering,sigma=1)
-    outlier_df=outlier_df.rename(columns={'time':'Time','cluster_id':'cluster'})
+    
+    outlier_df=outlier_df.rename(columns={'time':'Time','cluster_id':'cluster','object_id':'ObjectID'})
+
+    outlier_df['outlier']=outlier_df['outlier'].apply(lambda x: -1 if x is True  else 0)
+
+    paths_weights=outlier_df.groupby(['count']).size()
+    outliers=outlier_df.query('outlier == -1')
+    print('OUTLIER DF:')
     print(outlier_df)
+    print()
+    print('OUTLIERS:')
+    print(outliers)
+    print()   
+    print('paths weights:')
+    print(paths_weights)
+    
+    #df_qry_result=outlier_df.query()
+
     plotter=DataPlotter(plotter_config)
     plot=plotter.plot_twodim_clusters(outlier_df,outlier=True)
+    plot.savefig('test.png')
